@@ -11,6 +11,9 @@ plugins {
     id 'java-library'
 }
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
@@ -24,5 +27,18 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:28.2-jre'
 
-    // Find yourself a JUnit dependency for testing!!! (hint, check HelloGradle)
+        // https://mvnrepository.com/artifact/org.postgresql/postgresql
+	implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.18'
+    //This^^ dependency will let us use JDBC (Java Database Connectivity) 
+    //so our Java (server/backend) can communicate with our PostgreSQL Database
+    
+    //This^^ dependency will let us use Log4J in order to implement Logging in our application
+	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
+    //javalin dependency
+    compile group: 'io.javalin', name: 'javalin', version: '3.13.3'
+    compile "org.slf4j:slf4j-simple:1.7.30"
+        //GSON dependency
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+
 }
