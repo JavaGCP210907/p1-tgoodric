@@ -18,6 +18,29 @@ public class User {
 
 
 	/**
+	 * @param userId
+	 * @param username
+	 * @param passwordHash
+	 * @param fName
+	 * @param lName
+	 * @param email
+	 * @param roleId
+	 */
+	public User(int userId, String username, String passwordHash, String fName, String lName, String email,
+			int roleId) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.passwordHash = passwordHash;
+		this.fName = fName;
+		this.lName = lName;
+		this.email = email;
+		this.roleId = roleId;
+	}
+
+
+
+	/**
 	 * @param username User-selected username, must be unique
 	 * @param passwordHash 
 	 * @param fName
