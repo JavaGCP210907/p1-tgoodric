@@ -27,6 +27,7 @@ public class UserDao implements IUserDao {
 		// No implementation
 	}
 
+	
 	@Override
 	public ArrayList<User> getUsers() throws SQLException {
 		
@@ -85,7 +86,7 @@ public class UserDao implements IUserDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+ 	
 	
 	/**
 	 * Returns an ArrayList<User> (of size 1) matching the username passed
