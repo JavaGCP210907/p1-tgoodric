@@ -44,7 +44,7 @@ public class UserDao implements IUserDao {
 			sb.append(e.getSQLState());
 			sb.append("\nVendor Error Code: ");
 			sb.append(e.getErrorCode());
-			throw new SQLException(sb.toString());
+			throw new SQLException(sb.toString(), e);
 		}
 		return users;
 	}
