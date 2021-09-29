@@ -17,6 +17,8 @@ public class Launcher {
 		ReimbursementController rc = new ReimbursementController();
 		//
 		app.get("/reimbursements", rc.getAllReimbursementsHandler);
+		//app.get("reimbursements/" + , rc.get)
+		//app.
 		
 	}
 
