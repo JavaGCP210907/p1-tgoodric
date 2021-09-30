@@ -16,7 +16,7 @@ public class ReimbursementController {
 	
 	public Handler getAllReimbursementsHandler = (ctx)->{
 		
-		//check for session
+		//check for session, return 403 for if not a manager
 		/*
 		if(ctx.req.getSession(false) != null) {
 			//TODO: implement logins, check 09/27 morning, 
@@ -25,6 +25,9 @@ public class ReimbursementController {
 		else {
 			return;
 		}*/
+		
+		
+		
 		List<Reimbursement> allReimbursements = rs.getReimbursements();
 		
 		//parse into JSON
@@ -32,8 +35,29 @@ public class ReimbursementController {
 		
 		String reimbursementJSON = gson.toJson(allReimbursements);
 		
+		
 		ctx.result(reimbursementJSON);
 		ctx.status(200);
+	};
+	
+	public Handler getReimbursementsByUserHandler = (ctx)->{
+		
+		//check for session, pull the username
+		
+		//authenticate
+		
+		//if authenticated
+		String username = ctx.pathParam("username");
+		
+		Gson gson = new Gson();
+		
+		List<Reimbursement> reimbursements = rs.getReimbursements(username);
+		
+		String reimbursementJSON = gson.toJson(reimbursements);
+		
+		ctx.result(reimbursementJSON);
+		ctx.status(200);
+		
 	};
 	
 }

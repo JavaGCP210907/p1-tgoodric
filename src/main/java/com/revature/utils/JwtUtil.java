@@ -8,18 +8,18 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 public class JwtUtil {
 
     // never let anyone know your secret
-   // private static final String secret ="super secret string noone else should ever have";
+   // private static final String secret ="super secret string no one else should ever have";
     private static final String secret ="changing this string shouldn't break anything but probably will out of sheer spite";
     private static final Algorithm algorithm = Algorithm.HMAC256(secret);
 
-    // put in the parameters that you want to be in the body of your jwt,
+    // put in the parameters that you want to be in the body of your JWT,
     public static String generate(String username, String password){
 
         // builder design pattern
         String token = JWT.create()
                 .withClaim("username", username) // add data to the payload
                 .withClaim("password", password)
-                .sign(algorithm); // this will generate a signture based off of those claims
+                .sign(algorithm); // this will generate a signature based off of those claims
 
         return  token;
     }

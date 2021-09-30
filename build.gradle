@@ -23,7 +23,8 @@ repositories {
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api 'org.apache.commons:commons-math3:3.6.1'
-	testImplementation 'junit:junit:4.12'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0' 
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine' 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:28.2-jre'
 	
@@ -31,6 +32,8 @@ dependencies {
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.18'
     //This^^ dependency will let us use JDBC (Java Database Connectivity) 
     //so our Java (server/backend) can communicate with our PostgreSQL Database
+    
+    
     
     //This^^ dependency will let us use Log4J in order to implement Logging in our application
 	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'

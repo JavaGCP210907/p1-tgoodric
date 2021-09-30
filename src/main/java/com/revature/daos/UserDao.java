@@ -27,12 +27,12 @@ public class UserDao implements IUserDao {
 		// No implementation
 	}
 
-	
+
 	@Override
 	public ArrayList<User> getUsers() throws SQLException {
-		
+
 		String sql = "select * from users";
-		
+
 		ArrayList<User> users = null;
 		try(Connection conn = ConnectionUtils.getConnection()){
 			Statement s = conn.createStatement();
@@ -69,11 +69,11 @@ public class UserDao implements IUserDao {
 					rs.getString("email"),
 					rs.getInt("role_id_fk")
 					);
-		users.add(u);
+			users.add(u);
 		}
 		return users;
 	}
-	
+
 	/**
 	 * Returns an ArrayList<User> (of size 1) matching the userId passed
 	 * 
@@ -81,13 +81,13 @@ public class UserDao implements IUserDao {
 	 * @return ArrayList<User> the Users matching the ID passed
 	 * @throws SQLException
 	 */
- 	@Override
+	@Override
 	public ArrayList<User> getUsers(int userId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
- 	
-	
+
+
 	/**
 	 * Returns an ArrayList<User> (of size 1) matching the username passed
 	 * 
@@ -97,15 +97,15 @@ public class UserDao implements IUserDao {
 	 */
 	@Override
 	public ArrayList<User> getUsers(String username) throws SQLException {
-		
+
 		String sql = "select * from users where username = ?";
 		ResultSet rs = null;
 		ArrayList<User> users = null;
 		try(Connection conn = ConnectionUtils.getConnection()){
-			
+
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, username);
-			
+
 			rs = ps.executeQuery();
 			users = generateResults(rs);
 			return users;
@@ -115,7 +115,7 @@ public class UserDao implements IUserDao {
 			sb.append(e.getSQLState());
 			sb.append("\nVendor Error Code: ");
 			sb.append(e.getErrorCode());
-			throw new SQLException(sb.toString());
+			throw new SQLException(sb.toString(), e);
 		}
 	}
 
@@ -147,6 +147,30 @@ public class UserDao implements IUserDao {
 	public boolean updateUser(int userId, User updated) {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+
+	@Override
+	public ArrayList<User> getForLogin(String username, String password) throws SQLException {
+		String sql = "select * from users where username = ? and password_hash = ?";
+		ResultSet rs = null;
+		ArrayList<User> result = null;
+		try(Connection conn = ConnectionUtils.getConnection()){
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, username);
+			ps.setString(2, password);
+
+			rs = ps.executeQuery();
+			result = generateResults(rs);
+			return result;
+		}
+		catch(SQLException e) {
+			StringBuilder sb = new StringBuilder("Error occurred while attempting to log in: \nSQL State: ");
+			sb.append(e.getSQLState());
+			sb.append("\nVendor Error Code: ");
+			sb.append(e.getErrorCode());
+			throw new SQLException(sb.toString(), e);
+		}
 	}
 
 }

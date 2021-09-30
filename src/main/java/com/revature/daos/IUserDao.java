@@ -13,6 +13,7 @@ public interface IUserDao {
 	public ArrayList<User> getUsers(String username) throws SQLException;
 	public ArrayList<User> getUsers(String fName, String lName) throws SQLException;
 	public ArrayList<User> getUsers(Role role) throws SQLException;
+	public ArrayList<User> getForLogin(String username, String password) throws SQLException;
 	public boolean createUser(User user) throws SQLException;
 	public boolean deactivateUser(int userId) throws SQLException; //users never deleted for record-keeping purposes
 	public boolean updateUser(int userId, User updated) throws SQLException; //TODO:may need to change this one
