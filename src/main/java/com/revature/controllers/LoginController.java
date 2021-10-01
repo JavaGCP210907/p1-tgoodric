@@ -16,20 +16,24 @@ public class LoginController {
 		String body = ctx.body(); //pull data from POST to Java String
 		
 		Gson gson = new Gson();
-		
+
+
 		LoginDTO ldto = gson.fromJson(body, LoginDTO.class);
-		//TODO: continue implementation of login controller
-		//Recordings 9/27 @ 2:17:02
 		
 		if(ls.login(ldto.getUsername(), ldto.getPassword())) {
+			
+			
 			//Generate JWT
 			String jwt = JwtUtil.generate(ldto.getUsername(), ldto.getPassword());
 			
 			//create user session
 			ctx.req.getSession();
-			
-			ctx.result("Login successful. Welcome, " + ldto.getUsername());
-			
+			StringBuilder sb = new StringBuilder("Login successful. Welcome, ");
+			sb.append(ldto.getUsername());
+			sb.append(" \nJWT: ");
+			sb.append(jwt);
+			ctx.result(sb.toString());
+			System.out.println(ctx.body()); //debug line
 			//return successful status code
 			ctx.status(200);
 		}

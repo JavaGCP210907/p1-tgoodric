@@ -27,17 +27,21 @@ public class ReimbursementController {
 		}*/
 		
 		
-		
-		List<Reimbursement> allReimbursements = rs.getReimbursements();
-		
-		//parse into JSON
-		Gson gson = new Gson();
-		
-		String reimbursementJSON = gson.toJson(allReimbursements);
-		
-		
-		ctx.result(reimbursementJSON);
-		ctx.status(200);
+		if((ctx.req.getSession(false) != null) && /*check role*/ true){
+			List<Reimbursement> allReimbursements = rs.getReimbursements();
+
+			//parse into JSON
+			Gson gson = new Gson();
+
+			String reimbursementJSON = gson.toJson(allReimbursements);
+
+
+			ctx.result(reimbursementJSON);
+			ctx.status(200);
+		}
+		else {
+			ctx.status(403);
+		}
 	};
 	
 	public Handler getReimbursementsByUserHandler = (ctx)->{
