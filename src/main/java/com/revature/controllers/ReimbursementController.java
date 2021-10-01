@@ -39,11 +39,12 @@ public class ReimbursementController {
 	
 	public Handler getReimbursementsByUserHandler = (ctx)->{
 		
-		//check for session, pull the username
+		//check for session
 		
 		//authenticate
+		boolean authenticated = true; //TODO: add authentication logic
 		
-		//if authenticated
+		if(authenticated) {
 		String username = ctx.pathParam("username");
 		
 		Gson gson = new Gson();
@@ -54,7 +55,10 @@ public class ReimbursementController {
 		
 		ctx.result(reimbursementJSON);
 		ctx.status(200);
-		
+		}
+		else {
+			ctx.status(403);
+		}
 	};
 	
 	public Handler addReimbursementHandler = (ctx) -> {

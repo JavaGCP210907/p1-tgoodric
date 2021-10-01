@@ -10,7 +10,7 @@ public class LoginService {
 	
 	//select user name and password
 	
-	public boolean login(String username, String password) {
+	public int login(String username, String password) {
 		//System.out.println(username + password);
 		UserDao uDao = new UserDao();
 		
@@ -20,17 +20,16 @@ public class LoginService {
 			match = uDao.getForLogin(username, password);
 			//System.out.println(match);
 		} 
-		catch (SQLException e) { //TODO: figure out how to properly handle this
+		catch (SQLException e) { //precaution, DB errors return 0
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			return false;
+			return 0;
 		}
 		
 		if (match.size() != 1) {//> 1 impossible due to database constraints, but 
-			return false;		//guarding against it anyways
+			return 0;			//guarding against it anyways
 		}
-		
-		return true;
+		return match.get(0).getRoleId(); 
 	}
 	
 }

@@ -65,6 +65,90 @@ public class User {
 		return "User [userId=" + userId + ", username=" + username + ", passwordHash=" + passwordHash + ", fName="
 				+ fName + ", lName=" + lName + ", email=" + email + ", roleId=" + roleId + "]";
 	}
+
+
+
+	public int getUserId() {
+		return userId;
+	}
+
+
+
+	public String getUsername() {
+		return username;
+	}
+
+
+
+	public String getPasswordHash() {
+		return passwordHash;
+	}
+
+
+
+	public String getfName() {
+		return fName;
+	}
+
+
+
+	public String getlName() {
+		return lName;
+	}
+
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+
+	public int getRoleId() {
+		return roleId;
+	}
+
+
+
+	void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+
+
+	void setUsername(String username) {
+		this.username = username;
+	}
+
+
+
+	void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
+	}
+
+
+
+	void setfName(String fName) {
+		this.fName = fName;
+	}
+
+
+
+	void setlName(String lName) {
+		this.lName = lName;
+	}
+
+
+
+	void setEmail(String email) {
+		this.email = email;
+	}
+
+
+
+	void setRoleId(int roleId) {
+		this.roleId = roleId;
+	}
 	
 	
 }

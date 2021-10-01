@@ -19,13 +19,25 @@ public class LoginController {
 
 
 		LoginDTO ldto = gson.fromJson(body, LoginDTO.class);
-		
-		if(ls.login(ldto.getUsername(), ldto.getPassword())) {
+		int result = ls.login(ldto.getUsername(), ldto.getPassword());
+		if(result != 0) {
 			
 			
 			//Generate JWT
 			String jwt = JwtUtil.generate(ldto.getUsername(), ldto.getPassword());
-			
+			//return successful status code
+			//200 for employees, 202 for managers
+			if (result == 1) { //employee
+				ctx.status(200);
+			}
+			else if (result == 2) { //manager
+				ctx.status(202);
+			}
+			else { //invalid code
+				ctx.status(401);
+				ctx.result("User is deactivated, consult management");
+				return; //exit early if an invalid
+			}
 			//create user session
 			ctx.req.getSession();
 			StringBuilder sb = new StringBuilder("Login successful. Welcome, ");
@@ -33,18 +45,14 @@ public class LoginController {
 			sb.append(" \nJWT: ");
 			sb.append(jwt);
 			ctx.result(sb.toString());
-			System.out.println(ctx.body()); //debug line
-			//return successful status code
-			ctx.status(200);
+			//System.out.println(ctx.body()); //debug line
+			
+			
 		}
 		else {
 			ctx.status(401); //401 unauthorized
 			ctx.result("Username or password invalid");
 		}
-		
-		//have the authentication cookie contain the user's id, employee type?
-		
-		
 	};
 	
 	

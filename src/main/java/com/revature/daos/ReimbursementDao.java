@@ -135,15 +135,21 @@ public class ReimbursementDao implements IReimbursementDao {
 			ps.setString(4, r.getDescription());
 			ps.setBytes(5, null);
 			ps.setInt(6, r.getSubmittedBy()); 
-			ps.setInt(7,4);//4 is a userId to mark no resolver
+			ps.setInt(7,4);//4 is a userId to mark no resolver, added after test users
 			ps.setInt(8, r.getReimbursementType());
 			ps.setInt(9, r.getStatus());
 			ps.executeUpdate();
+			
+			return true;
 		}
 		catch (SQLException e) {
-			
+			StringBuilder sb = new StringBuilder("Error occurred while adding reimbursement: ");
+			sb.append("\nSQL State: ");
+			sb.append(e.getSQLState());
+			sb.append("\nVendor Error Code: ");
+			sb.append(e.getErrorCode());
+			throw new SQLException(sb.toString(),e);
 		}
-		return false;
 	}
 
 }
