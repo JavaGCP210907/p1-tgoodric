@@ -14,4 +14,6 @@ public interface IReimbursementDao {
 	public ArrayList<Reimbursement> getReimbursementsByStatus(int status) throws SQLException;
 	public ArrayList<Reimbursement> getReimbursementsBySubmitterId(int userId) throws SQLException;
 	public ArrayList<Reimbursement> getReimbursementsbyResolverId(int userId) throws SQLException;
+	
+	public boolean addReimbursement(Reimbursement r) throws SQLException;
 }

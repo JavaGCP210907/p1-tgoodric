@@ -3,6 +3,7 @@ package com.revature.controllers;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.revature.daos.ReimbursementDao;
 import com.revature.models.Reimbursement;
 import com.revature.services.ReimbursementService;
 
@@ -16,18 +17,10 @@ public class ReimbursementController {
 	
 	public Handler getAllReimbursementsHandler = (ctx)->{
 		
-		//check for session, return 403 for if not a manager
-		/*
-		if(ctx.req.getSession(false) != null) {
-			//TODO: implement logins, check 09/27 morning, 
-			//See also the nonsense about same-site cookies in Discord
-		}
-		else {
-			return;
-		}*/
+		//check for session, return 403 forbidden if not a manager
 		
-		
-		if((ctx.req.getSession(false) != null) && /*check role*/ true){
+		//if(true){
+		if((ctx.req.getSession(false) != null) && /*TODO: check role*/ true){
 			List<Reimbursement> allReimbursements = rs.getReimbursements();
 
 			//parse into JSON
@@ -64,4 +57,18 @@ public class ReimbursementController {
 		
 	};
 	
+	public Handler addReimbursementHandler = (ctx) -> {
+		//pull username or id from auth token
+		
+		//pull the reimbursement data from the webpage as JSON
+		
+		String reimbursementJson = ctx.body();
+		
+		Gson gson = new Gson();
+		Reimbursement reimbursement = gson.fromJson(reimbursementJson, Reimbursement.class);
+		
+		ReimbursementDao rDao = new ReimbursementDao();
+		rDao.addReimbursement(reimbursement);
+		//rDao.
+	};
 }

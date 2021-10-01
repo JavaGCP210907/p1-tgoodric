@@ -18,7 +18,9 @@ public class ReimbursementService {
 	
 	public ArrayList<Reimbursement> getReimbursements(){
 		try {
-			return rDao.getReimbursements();
+			ArrayList<Reimbursement> result = rDao.getReimbursements();
+			System.out.println(result);
+			return result;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

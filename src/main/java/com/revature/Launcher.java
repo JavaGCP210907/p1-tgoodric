@@ -19,7 +19,7 @@ public class Launcher {
 		//User user = new User("jDoe", "swordfish", "John", "Doe", "jdoe@email.com", null);
 		//System.out.println(user);
 		
-		//create Javalin instance to expose API endpoints
+		//create Javalin instance to expose API end points
 		Javalin app = Javalin.create(
 				config ->{
 					config.enableCorsForAllOrigins();
@@ -27,14 +27,12 @@ public class Launcher {
 				).start(8192);
 		LoginController lc = new LoginController();
 		ReimbursementController rc = new ReimbursementController();
-		/*
-		LoginDTO ldto = new LoginDTO("tgoodrich", "password");
-		Gson gson = new Gson();
-		System.out.println(gson.toJson(ldto));
-		*/
-		app.post("/login", lc.loginHandler);
-		//
-		app.get("/reimbursements", rc.getAllReimbursementsHandler);
+
+		app.post("/login", lc.loginHandler); //working
+		app.get("/reimbursements", rc.getAllReimbursementsHandler); // TODO: add validation for id
+		app.post("/addReimbursement", rc.addReimbursementHandler);
+																//disregard this
+		//app.patch("/approveRequest", handler)
 		//app.get("reimbursements/" + , rc.get)
 		//app.
 		
