@@ -31,7 +31,7 @@ public class Launcher {
 		app.post("/login", lc.loginHandler); //working
 		app.get("/reimbursements", rc.getAllReimbursementsHandler); // TODO: add validation for id
 		app.post("/addReimbursement", rc.addReimbursementHandler);
-																//disregard this
+		app.get("/reimbursements/:username", rc.getReimbursementsByUserHandler);
 		//app.patch("/approveRequest", handler)
 		//app.get("reimbursements/" + , rc.get)
 		//app.

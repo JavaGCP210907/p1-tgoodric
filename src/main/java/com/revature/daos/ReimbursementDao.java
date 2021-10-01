@@ -75,7 +75,7 @@ public class ReimbursementDao implements IReimbursementDao {
 	@Override
 	public ArrayList<Reimbursement> getReimbursements(String username) throws SQLException {
 		String sql = "select * from reimbursements inner join users " +
-				"on users.user_id = reimbursements.user_id_fk " +
+				"on users.user_id = reimbursements.submitter_id_fk " +
 				"where username = ?"; //god I hate writing SQL queries
 		ResultSet rs = null;
 		ArrayList<Reimbursement> results = null;

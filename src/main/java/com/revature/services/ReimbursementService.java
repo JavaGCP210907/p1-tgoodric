@@ -48,9 +48,22 @@ public class ReimbursementService {
 	
 	}
 	
+	/**
+	 * Service layer wrapper for getting all reimbursements for a given ID
+	 * 
+	 * @param username String the username being searched for
+	 * @return ArrayList containing the reimbursements for the user
+	 */
 	public ArrayList<Reimbursement> getReimbursements(String username){
-		// TODO Auto-generated method stub
-		return null;
+		//TODO: implement validation logic
+		
+		try {
+			return rDao.getReimbursements(username);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			return new ArrayList<Reimbursement>();
+		}
 	}
 
 	
