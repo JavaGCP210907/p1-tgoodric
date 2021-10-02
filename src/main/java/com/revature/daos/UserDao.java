@@ -172,5 +172,26 @@ public class UserDao implements IUserDao {
 			throw new SQLException(sb.toString(), e);
 		}
 	}
+	int getUserId(String username) {
+		String sql = "select * from users where username = ?";
+		ResultSet rs = null;
+		ArrayList<User> users = null;
+		try(Connection conn = ConnectionUtils.getConnection()){
+			System.out.println(username);
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, username);
 
+			rs = ps.executeQuery();
+			users = generateResults(rs);
+			//
+			return users.get(0).getUserId();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (IndexOutOfBoundsException e) {
+			System.out.println("stop being a moron and fix your damn code, Tristan");
+		}
+		return 0;
+	}
 }

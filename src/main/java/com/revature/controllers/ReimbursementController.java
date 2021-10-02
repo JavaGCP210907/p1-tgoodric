@@ -20,7 +20,7 @@ public class ReimbursementController {
 		//check for session, return 403 forbidden if not a manager
 		
 		//if(true){
-		if((ctx.req.getSession(false) != null) && /*TODO: check role*/ true){
+		if((ctx.req.getSession(false) != null)){
 			List<Reimbursement> allReimbursements = rs.getReimbursements();
 
 			//parse into JSON
@@ -50,7 +50,7 @@ public class ReimbursementController {
 		Gson gson = new Gson();
 		
 		List<Reimbursement> reimbursements = rs.getReimbursements(username);
-		
+		//System.out.println(reimbursements);
 		String reimbursementJSON = gson.toJson(reimbursements);
 		
 		ctx.result(reimbursementJSON);

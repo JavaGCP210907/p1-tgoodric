@@ -47,6 +47,7 @@ public class ReimbursementDao implements IReimbursementDao {
 	}
 
 	private ArrayList<Reimbursement> generateResults(ResultSet rs) throws SQLException {
+		//System.out.println("in generateResults()");
 		ArrayList<Reimbursement> reimbursements;
 		reimbursements = new ArrayList<Reimbursement>();
 		while(rs.next()) {
@@ -62,6 +63,7 @@ public class ReimbursementDao implements IReimbursementDao {
 					rs.getInt("reimbursement_type_fk"),
 					rs.getInt("reimbursement_status_fk"));
 			reimbursements.add(r);
+			//System.out.println(r);
 		}
 		return reimbursements;
 	}
@@ -74,16 +76,25 @@ public class ReimbursementDao implements IReimbursementDao {
 
 	@Override
 	public ArrayList<Reimbursement> getReimbursements(String username) throws SQLException {
+		//System.out.println("in DAO");
+		
+		//String sql = "select * from reimbursements where submitter_id_fk = ?";
 		String sql = "select * from reimbursements inner join users " +
 				"on users.user_id = reimbursements.submitter_id_fk " +
 				"where username = ?"; //god I hate writing SQL queries
-		ResultSet rs = null;
+		//UserDao uDao = new UserDao();
+		//int id = uDao.getUserId(username); 	//it's a workaround, and I don't like it
+		ResultSet rs = null;				
 		ArrayList<Reimbursement> results = null;
 		try(Connection conn = ConnectionUtils.getConnection()){
 			PreparedStatement ps = conn.prepareStatement(sql);
+			//ps.setInt(1, id);
 			ps.setString(1, username);
+			
 			rs = ps.executeQuery();
+			//System.out.println("fetching results");
 			results = generateResults(rs);
+			System.out.println(results);
 			return results;
 		}
 		catch(SQLException e) {
@@ -93,6 +104,7 @@ public class ReimbursementDao implements IReimbursementDao {
 			sb.append(e.getSQLState());
 			sb.append("\nVendor Error Code: ");
 			sb.append(e.getErrorCode());
+			//System.out.println(sb);
 			throw new SQLException(sb.toString());
 		}
 	}
