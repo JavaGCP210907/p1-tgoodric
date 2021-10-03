@@ -2,9 +2,15 @@
 const url = "http://localhost:8192/"; //set url
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const username = urlParams.get("username");
+//const username = urlParams.get("username");
 console.log
-const manager = urlParams.get("manager");
+//const manager = urlParams.get("manager");
+const params = getCookie("username"); //it wouldn't work with params, don't ask
+//const role = getCookie("role");
+console.log("params: " + params);
+const paramArray = params.split("|");
+const username = paramArray[0];
+const role = paramArray[1];
 
 
 let pageContents =  document.getElementById("pageContents");    
@@ -14,9 +20,9 @@ titleHeader.innerText = "Initech Reimbursement Management System";
 //title
 submissionForm.appendChild(titleHeader);
 submissionForm.appendChild(document.createElement("br"));
-if(manager){
+if(role === "employee"){
     //Generate the page contents for non-manager
-    console.log(username);
+    //console.log(username);
     let instructions = document.createElement("h3");
     instructions.innerText = "Enter information required for reimbursement request:";
     submissionForm.appendChild(instructions);
@@ -126,7 +132,7 @@ function createDiv(type){
 }
 
 async function submitFunc() {
-	//console.log(username);
+	console.log(username);
 	//pull values from the fields
 	let amt = document.getElementById("amount").value;
 	console.log(amt);
@@ -135,34 +141,59 @@ async function submitFunc() {
 	let type = document.getElementById("expenseType").value;
 	//console.log(expenseType);
 	//console.log("username is" + username)
-	let reimbursementRequest = {
-		amount:amt,	
-		description:descr,
-		user:urlParams.get("username"),
-        expenseType:type
-	};
-	let response = await fetch(url + "addReimbursement", {
-		method:"POST",
-		body:JSON.stringify(reimbursementRequest),
-		credentials:"include"
-	});
-	if ((response.status === 400)){
+	let responseStatus = await submit()
+	//}
+	//catch(error){
+		//hopefully this will work
+	//}
+	if ((responseStatus === 400)){
 		if(amt !== ""){
 			alert("Please enter amount in the format XX.YY");
 		}
 		return;
 	}
-	else if (response.status == 201){
+	else if (responseStatus == 201){
 		alert("Request submitted, awaiting approval");
 		//clear request history
-		let reimbursementTable = document.getElementById("reimbursementTable");
-		if (reimbursementTable != null){
-			reimbursementTable.remove();
-		}
+		//let reimbursementTable = document.getElementById("reimbursementTable");
+		//if (reimbursementTable != null){
+			//reimbursementTable.remove();
+		//}
 		//recreate table
-		reimbursementTable = createReimbursementTable();
+		//reimbursementTable = createReimbursementTable();
 	}
 	else{
 		alert("An error occurred while processing your request")
 	}
+	//console.log(reimbursementRequest);
+}
+
+function getCookie(cookieName) {
+	let name = cookieName + "=";
+	let ca = document.cookie.split(';');
+	for(let i = 0; i < ca.length; i++) {
+	  let c = ca[i];
+	  while (c.charAt(0) == ' ') {
+		c = c.substring(1);
+	  }
+	  if (c.indexOf(name) == 0) {
+		return c.substring(name.length, c.length);
+	  }
+	}
+	return "";
+  }
+async function submit(amt, descr, usern, type){
+	let reimbursementRequest = {
+		amount:amt,	
+		description:descr,
+		user:usern,
+        expenseType:type
+	};
+	//try{
+	let response = fetch(url + "addReimbursement/", {
+		method:"POST",
+		body:JSON.stringify(reimbursementRequest),
+		credentials:"include"
+	});
+	return (await response).status;
 }

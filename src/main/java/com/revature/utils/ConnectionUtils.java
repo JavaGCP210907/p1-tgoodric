@@ -13,9 +13,11 @@ public class ConnectionUtils {
 			e.printStackTrace();
 			System.out.println("Error occurred locating PostgreSQL driver");
 		}
-		String url = System.getenv("URL");
+		String gcpUrl = System.getenv("GCPURL");
+		//String url = System.getenv("URL");
+		String gcpPassword = System.getenv("GCPPASSWORD");
 		String username = System.getenv("USERNAME");
-		String password = System.getenv("PASSWORD");
-		return DriverManager.getConnection(url, username, password);
+		//String password = System.getenv("PASSWORD");
+		return DriverManager.getConnection(gcpUrl, username, gcpPassword);
 	}
 }

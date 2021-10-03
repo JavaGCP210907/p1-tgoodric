@@ -30,11 +30,23 @@ async function loginFunc(){
 
     if(response.status === 200 || response.status === 202){ //200 ok for employees, 202 accepted for mgrs
         const manager = (response.status === 202);
+		let paramString = uname;
+		//document.cookie = "params = " + uname + "; path = file:///C:/Users/tdgoo/Documents/Revature/Projects/p1javalin4Version/p1core/p1-tgoodric/p1frontend/p1landing.html";
+		if(manager){
+			paramString += "|manager"
+			//document.cookie = "params = " + paramString +"; path = file:///C:/Users/tdgoo/Documents/Revature/Projects/p1javalin4Version/p1core/p1-tgoodric/p1frontend/p1landing.html";
+		}
+		else{
+			paramString += "|employee"
+			//document.cookie = "params = " + uname +"|employee; path = file:///C:/Users/tdgoo/Documents/Revature/Projects/p1javalin4Version/p1core/p1-tgoodric/p1frontend/p1landing.html";
+		}
+		document.cookie = "username = " + paramString +"; path = file:///C:/Users/tdgoo/Documents/Revature/Projects/p1javalin4Version/p1core/p1-tgoodric/p1frontend/p1landing.html";
         //document.getElementById("loginButton").removeEventListener("click", loginFunc);
         document.getElementById("login-row").innerText = "Welcome, " + user.username;
         //alert("successful");
-        window.location.replace("file:///C:/Users/tdgoo/Documents/Revature/Projects/p1v3/p1-tgoodric/p1frontend/"
-         + "p1landing.html?username=" + user.username + "&manager=" + manager);
+        //window.location.replace("file:///C:/Users/tdgoo/Documents/Revature/Projects/p1javalin4Version/p1core/p1-tgoodric/p1frontend/p1landing.html");
+		window.location.replace("http://127.0.0.1:5500/Projects/p1Javalin4Version/p1Core/p1-tgoodric/p1frontend/p1landing.html");
+        // + ?username=" + user.username + "&manager=" + manager);
         /*let currentUser = user.username;
         if(manager){
         	currentUser = "all"; //TODO: implement dropdown selector for user for managers

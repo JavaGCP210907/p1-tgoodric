@@ -1,8 +1,11 @@
 package com.revature;
 
+import org.eclipse.jetty.server.session.DefaultSessionCache;
+import org.eclipse.jetty.server.session.SessionHandler;
+
 //import com.google.gson.Gson;
 
-//import java.sql.SQLException;
+import java.sql.SQLException;
 
 import com.revature.controllers.LoginController;
 import com.revature.controllers.ReimbursementController;
@@ -14,16 +17,17 @@ import io.javalin.Javalin;
 public class Launcher {
 
 	public static void main(String[] args) {
-		//PasswordEncoder encoder = new BCryptPasswordEncoder();
-		//System.out.println("Hello");
-		//User user = new User("jDoe", "swordfish", "John", "Doe", "jdoe@email.com", null);
-		//System.out.println(user);
-		
+		SessionHandler sessionHandler = new SessionHandler();
+		//DefaultSessionCache sessionCache = new DefaultSessionCache(sessionHandler);
+		sessionHandler.getSessionCookieConfig().setSecure(true);
+		sessionHandler.getSessionCookieConfig().setComment("__SAME_SITE_NONE__");
+		//sessionHandler.setSessionCache(sessionCache);
 		//create Javalin instance to expose API end points
 		Javalin app = Javalin.create(
 				config ->{
 					config.enableCorsForAllOrigins();
-				}				
+					config.sessionHandler(() -> sessionHandler);				
+					}				
 				).start(8192);
 		LoginController lc = new LoginController();
 		ReimbursementController rc = new ReimbursementController();
@@ -31,7 +35,7 @@ public class Launcher {
 		app.post("/login", lc.loginHandler); //working
 		app.get("/reimbursements", rc.getAllReimbursementsHandler); // TODO: add validation for id
 		app.post("/addReimbursement", rc.addReimbursementHandler);
-		app.get("/reimbursements/:username", rc.getReimbursementsByUserHandler);
+		app.get("/reimbursements/{username}", rc.getReimbursementsByUserHandler);
 		//app.patch("/approveRequest", handler)
 		//app.get("reimbursements/" + , rc.get)
 		//app.

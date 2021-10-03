@@ -66,7 +66,7 @@ public class ReimbursementController {
 		//pull username or id from auth token
 		
 		//pull the reimbursement data from the webpage as JSON
-		
+		System.out.println("in handler");
 		String reimbursementJson = ctx.body();
 		
 		Gson gson = new Gson();
@@ -75,9 +75,9 @@ public class ReimbursementController {
 		
 		System.out.println(rdto);
 		try {
-			System.out.println("in reimbursement handler");
+			//System.out.println("in reimbursement handler");
 			reimbursement = rdto.getReimbursement();
-			System.out.println("rdto parsed");
+			//System.out.println("rdto parsed");
 		}
 		catch(NumberFormatException e) {
 			ctx.status(400); //bad request

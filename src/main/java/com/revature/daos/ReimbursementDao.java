@@ -77,19 +77,20 @@ public class ReimbursementDao implements IReimbursementDao {
 	@Override
 	public ArrayList<Reimbursement> getReimbursements(String username) throws SQLException {
 		//System.out.println("in DAO");
-		
-		//String sql = "select * from reimbursements where submitter_id_fk = ?";
-		String sql = "select * from reimbursements inner join users " +
-				"on users.user_id = reimbursements.submitter_id_fk " +
-				"where username = ?"; //god I hate writing SQL queries
-		//UserDao uDao = new UserDao();
-		//int id = uDao.getUserId(username); 	//it's a workaround, and I don't like it
+		System.out.println(username);
+		String sql = "select * from reimbursements where submitter_id_fk = ?";
+		//String sql = "select * from reimbursements inner join users " +
+		//		"on users.user_id = reimbursements.submitter_id_fk " +
+		//		"where username = ?"; //god I hate writing SQL queries
+		UserDao uDao = new UserDao();
+		int id = uDao.getUserId(username); 	//it's a workaround, and I don't like it
 		ResultSet rs = null;				
 		ArrayList<Reimbursement> results = null;
 		try(Connection conn = ConnectionUtils.getConnection()){
 			PreparedStatement ps = conn.prepareStatement(sql);
-			//ps.setInt(1, id);
-			ps.setString(1, username);
+			ps.setInt(1, id);
+			//System.out.println(username);
+			//ps.setString(1, username);
 			
 			rs = ps.executeQuery();
 			//System.out.println("fetching results");

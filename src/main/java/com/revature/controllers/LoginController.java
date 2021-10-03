@@ -29,9 +29,11 @@ public class LoginController {
 			//200 for employees, 202 for managers
 			if (result == 1) { //employee
 				ctx.status(200);
+				ctx.sessionAttribute("role", "employee");
 			}
 			else if (result == 2) { //manager
 				ctx.status(202);
+				ctx.sessionAttribute("role", "manager");
 			}
 			else { //invalid code
 				ctx.status(401);
