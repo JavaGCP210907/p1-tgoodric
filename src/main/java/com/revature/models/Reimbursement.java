@@ -10,11 +10,11 @@ public class Reimbursement {
 	private Date submitted; //date, not null, consider changing to BigDecimal for arbitrary precision
 	private Date resolved; //date, nulls allowed
 	private String description; //text, 
-	private Image receipt; //Stored in PostgreSQL as BYTEA, BLOB not supported by PostgreSQL
+	private Image receipt; //Stored in PostgreSQL as BYTEA, BLOB not supported by PostgreSQL AFAICT
 	private int reimbursementType; // FK, keyed to type of reimbursement 
 	private int submittedBy; // FK, keyed to person who requested	
 	private int resolvedBy; // FK, keyed to person who resolved
-	private int status; //FK, keyed to status
+	private int status = 1; //FK, keyed to status
 	
 	//Mostly completed 09/26, additional ctors may be added later
 	
@@ -23,6 +23,8 @@ public class Reimbursement {
 	}
 
 	/**
+	 * All-Arguments Constructor
+	 * 
 	 * @param reimbursementId serial PK in database
 	 * @param amount amount being reimbursed
 	 * @param submitted SQL date submitted
@@ -50,6 +52,8 @@ public class Reimbursement {
 	}
 
 	/**
+	 * Most-arguments Constructor
+	 * 
 	 * @param amount amount being reimbursed
 	 * @param submitted SQL date submitted
 	 * @param resolved SQL date resolved, nulls allowed
@@ -88,6 +92,7 @@ public class Reimbursement {
 		this.description = description;
 		this.reimbursementType = reimbursementType;
 		this.submittedBy = submittedBy;
+		this.status = 1;
 	}
 	
 	/**
@@ -107,6 +112,7 @@ public class Reimbursement {
 		this.receipt = receipt;
 		this.reimbursementType = reimbursementType;
 		this.submittedBy = submittedBy;
+		this.status = 1;
 	}
 
 	/**
@@ -121,6 +127,10 @@ public class Reimbursement {
 		this.description = description;
 		this.reimbursementType = reimbursementType;
 		this.submittedBy = submittedBy;
+		this.submitted = new Date(System.currentTimeMillis());
+		this.resolved = null;
+		this.receipt = null;
+		this.status = 1;
 	}
 
 	/**
@@ -138,7 +148,9 @@ public class Reimbursement {
 		this.reimbursementType = reimbursementType;
 		this.submittedBy = submittedBy;
 	}
-
+	
+	
+	
 	//boilerplate instance methods
 	@Override
 	public int hashCode() {

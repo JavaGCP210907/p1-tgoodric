@@ -172,10 +172,11 @@ public class UserDao implements IUserDao {
 			throw new SQLException(sb.toString(), e);
 		}
 	}
-	int getUserId(String username) {
+	public int getUserId(String username) {
 		String sql = "select * from users where username = ?";
 		ResultSet rs = null;
 		ArrayList<User> users = null;
+		System.out.println(username);
 		try(Connection conn = ConnectionUtils.getConnection()){
 			System.out.println(username);
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -188,9 +189,6 @@ public class UserDao implements IUserDao {
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch (IndexOutOfBoundsException e) {
-			System.out.println("stop being a moron and fix your damn code, Tristan");
 		}
 		return 0;
 	}

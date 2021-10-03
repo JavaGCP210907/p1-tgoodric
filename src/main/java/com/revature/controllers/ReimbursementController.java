@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.revature.daos.ReimbursementDao;
 import com.revature.models.Reimbursement;
+import com.revature.models.ReimbursementDTO;
 import com.revature.services.ReimbursementService;
 
 import io.javalin.http.Handler;
@@ -69,10 +70,29 @@ public class ReimbursementController {
 		String reimbursementJson = ctx.body();
 		
 		Gson gson = new Gson();
-		Reimbursement reimbursement = gson.fromJson(reimbursementJson, Reimbursement.class);
+		Reimbursement reimbursement = null;
+		ReimbursementDTO rdto = gson.fromJson(reimbursementJson, ReimbursementDTO.class);
 		
+		System.out.println(rdto);
+		try {
+			System.out.println("in reimbursement handler");
+			reimbursement = rdto.getReimbursement();
+			System.out.println("rdto parsed");
+		}
+		catch(NumberFormatException e) {
+			ctx.status(400); //bad request
+			return;
+		}
+		catch(Exception e) {
+			ctx.status(500); //internal server error, good catch-all code
+			System.out.println("error 500");
+			e.printStackTrace();
+			return;
+		}
 		ReimbursementDao rDao = new ReimbursementDao();
+		System.out.println("entering reimbursement dao");
 		rDao.addReimbursement(reimbursement);
+		ctx.status(201);
 		//rDao.
 	};
 }
