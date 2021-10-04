@@ -2,7 +2,7 @@
 const url = "http://localhost:8192/"; //set url
 console.log("Front-end design is my passion")
 document.getElementById("loginButton").addEventListener("click", loginFunc);
-//document.
+document.getElementById("submitButton").addEventListener("click", submitFunc);
 
 async function loginFunc(){
     let uname = document.getElementById("usernameField").value;
@@ -46,70 +46,14 @@ async function loginFunc(){
         //alert("successful");
         //window.location.replace("file:///C:/Users/tdgoo/Documents/Revature/Projects/p1javalin4Version/p1core/p1-tgoodric/p1frontend/p1landing.html");
 		window.location.replace("http://127.0.0.1:5500/Projects/p1Javalin4Version/p1Core/p1-tgoodric/p1frontend/p1landing.html");
-        // + ?username=" + user.username + "&manager=" + manager);
-        /*let currentUser = user.username;
-        if(manager){
-        	currentUser = "all"; //TODO: implement dropdown selector for user for managers
-        }
-        
-        let onLoginDiv = document.getElementById("onLogin");
-        
-        let titleHeader = document.createElement("h2");
-        titleHeader.innerText = "Initech Reimbursement Management System";
-        //title
-        onLoginDiv.appendChild(titleHeader);
-        onLoginDiv.appendChild(document.createElement("br"));
-        //if employee: create the reimbursement submission form
-        if(!manager){
-	        let instructions = document.createElement("h3");
-	        instructions.innerText = "Enter information required for reimbursement request:";
-	        onLoginDiv.appendChild(instructions);
-	        
-	        //Amount field
-	        let amountFieldDiv = createDiv("amount");
-	        onLoginDiv.appendChild(amountFieldDiv);
-	        
-	        //description
-	        let descriptionFieldDiv = createDiv("description");
-	        onLoginDiv.appendChild(descriptionFieldDiv);
-			
-			let expenseDiv = document.createElement("div")
-			expenseDiv.setAttribute("id", "expenseDiv");
-			let expenseType = createDropDown();
-			expenseType.setAttribute("id", "expenseType");
-			expenseDiv.appendChild(expenseType);
-			expenseDiv.appendChild(document.createElement("br"));
-			expenseDiv.appendChild(document.createElement("br"));
-			onLoginDiv.appendChild(expenseDiv);
-			
-			//submit button 
-			let submitButton = document.createElement("button");
-			submitButton.setAttribute("id", "submitButton");
-			//submitButton.setAttribute("text", "Submit");
-			submitButton.addEventListener("click", submitFunc(currentUser));
-			submitButton.setAttribute("class", "btn btn-dark col-sm-1");
-			submitButton.innerText = "Submit";
-			onLoginDiv.appendChild(submitButton);
-			onLoginDiv.appendChild(document.createElement("br"));
-			onLoginDiv.appendChild(document.createElement("br"));
-			
-		}
-		else{
-			//TODO: add dropdown menu for users
-		}
-		
-		
-		onLoginDiv.appendChild(createReimbursementTable(currentUser, manager));
-		
-		//testing
-		//getReimbursements("tgoodrich");
+
     }
     else{
         document.getElementById("login-row").innerText = "Username or password not found";
-    }*/}
+    }
 }
 
-async function submitFunc(username) {
+async function submitFunc() {
 	//console.log(username);
 	//pull values from the fields
 	let amt = document.getElementById("amount").value;

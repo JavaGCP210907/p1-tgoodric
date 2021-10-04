@@ -30,7 +30,7 @@ public class ReimbursementDao implements IReimbursementDao {
 
 	@Override
 	public ArrayList<Reimbursement> getReimbursements() throws SQLException {
-		String sql = "select * from reimbursements";
+		String sql = "select * from reimbursements order by reimbursement_id desc";
 		ArrayList<Reimbursement> reimbursements = null;
 		try(Connection conn = ConnectionUtils.getConnection()){
 			Statement s = conn.createStatement();
@@ -98,14 +98,14 @@ public class ReimbursementDao implements IReimbursementDao {
 	public boolean updateStatus(int id, int newStatus, int resolverId) throws SQLException{
 		String sql = "update reimbursements " +
 				"set reimbursement_status_fk = ?, resolver_id_fk = ?, resolved = ?" +
-				"where reimbursement_id = ?";
+				"where reimbursement_id = ?" ;
 		try(Connection conn = ConnectionUtils.getConnection()){
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, newStatus);
 			ps.setInt(2, resolverId);
 			ps.setDate(3, new Date(System.currentTimeMillis()));
 			ps.setInt(4, id);
-			Reimbursement r = getReimbursements(id).get(0);
+			//Reimbursement r = getReimbursements(id).get(0);
 			ps.execute(); //forgot this, was stumped as to why my updates were failing
 			//System.out.println(getReimbursements(id).get(0).equals(r));
 		}
@@ -120,7 +120,7 @@ public class ReimbursementDao implements IReimbursementDao {
 	@Override
 	public ArrayList<Reimbursement> getReimbursements(String username) throws SQLException {
 		//System.out.println(username);
-		String sql = "select * from reimbursements where submitter_id_fk = ?";
+		String sql = "select * from reimbursements where submitter_id_fk = ? order by reimbursement_id desc";
 		//String sql = "select * from reimbursements inner join users " +
 		//		"on users.user_id = reimbursements.submitter_id_fk " +
 		//		"where username = ?"; //god I hate writing SQL queries

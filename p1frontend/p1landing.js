@@ -2,23 +2,18 @@ const url = "http://localhost:8192/"; //set url
 
 let params = getCookie("username"); //it wouldn't work with params, don't ask
 let paramArray = params.split("|");
-let username = paramArray[0];
-let role = paramArray[1];
+const username = paramArray[0];
+const role = paramArray[1];
 
 //document.getElementById("")
 
 
 let pageContents =  document.getElementById("pageContents");    
-if(role === "employee"){
-   
-}
-else{
-	//stuff for managers
-}
 pageContents.appendChild(document.createElement("br"));
 pageContents.appendChild(document.createElement("br"));
 //button to generate reimbursements
-document.getElementById("viewReimbursementsButton").addEventListener("click", viewReimbursementsFunc)
+document.getElementById("viewReimbursementsButton").addEventListener("click", viewReimbursementsFunc);
+document.getElementById("submitButton").addEventListener("click", submitFunc);
 /* 
 async function getReimbursements(){
 	let response = null;
@@ -38,7 +33,8 @@ async function viewReimbursementsFunc(){
 			for (let reimbursement of data) {
 				let row = document.createElement("tr"); //create a table row
 
-				let cell = document.createElement("td"); 
+				let cell = document.createElement("th");
+				cell.setAttribute("scope", "row")
 				cell.innerHTML = reimbursement.reimbursementId; 
 				row.appendChild(cell);
 
@@ -61,15 +57,19 @@ async function viewReimbursementsFunc(){
 				let cell6 = document.createElement("td"); 
 				//cell6.innerHTML = reimbursement.resolved; 
 				row.appendChild(cell6);
-				
-				let approveButton = document.createElement("button");
-				approveButton.addEventListener("click", approveRequest);
-				approveButton.innerText="Approve";
-				let rejectButton = document.createElement("button");
-				rejectButton.addEventListener("click",rejectRequest);
-				rejectButton.innerText = "Deny";
-				cell6.appendChild(approveButton);
-				cell6.appendChild(rejectButton);
+				if (reimbursement.status == 1){
+					let approveButton = document.createElement("button");
+					approveButton.addEventListener("click", approveRequest);
+					approveButton.innerText="Approve";
+					let rejectButton = document.createElement("button");
+					rejectButton.addEventListener("click", rejectRequest);
+					rejectButton.innerText = "Deny";
+					cell6.appendChild(approveButton);
+					cell6.appendChild(rejectButton);
+				}
+				else{
+					cell6.innerHTML = statusType(reimbursement.status);
+				}
 				
 				let table = document.getElementById("reimbursementTable");
 				table.appendChild(row);
@@ -81,11 +81,14 @@ async function viewReimbursementsFunc(){
 		response = await fetch(url + "reimbursements/" + username);
 		if (response.status === 200){
 			let data = await response.json();
+			
 			for (let reimbursement of data) {
 				let row = document.createElement("tr"); //create a table row
 
-				let cell = document.createElement("td"); 
-				cell.innerHTML = reimbursement.reimbursementId; 
+				let cell = document.createElement("td");
+				cell.setAttribute("class", "idNumber" + reimbursement.reimbursementId) 
+				cell.innerHTML = reimbursement.reimbursementId;
+
 				row.appendChild(cell);
 
 				let cell2 = document.createElement("td"); 
@@ -97,19 +100,24 @@ async function viewReimbursementsFunc(){
 				row.appendChild(cell3);
 
 				let cell4 = document.createElement("td"); 
-				cell4.innerHTML = reimbursement.reimbursementStatusFk; 
+				cell4.innerHTML = reimbursement.submitted; 
 				row.appendChild(cell4);
 
-				let cell5 = document.createElement("td"); 
-				cell5.innerHTML = reimbursement.status; 
+				let cell5 = document.createElement("td");
+				if(reimbursement.resolved == undefined){
+					cell5.innerHTML = "Pending";
+				}
+				else{
+					cell5.innerHTML = reimbursement.resolved;
+				}
 				row.appendChild(cell5);
 				
 				let cell6 = document.createElement("td"); 
-				cell6.innerHTML = reimbursement.resolved; 
+				cell6.innerHTML = statusType(reimbursement.status); 
 				row.appendChild(cell6);
 				//row.setAttribute("class", "table table-striped table-dark");
 				let table = document.getElementById("reimbursementTable");
-				table.appendChild(row)
+				table.appendChild(row);
 				//table.setAttribute("class", "table table-dark table-striped")
 			}
 		}
@@ -118,6 +126,15 @@ async function viewReimbursementsFunc(){
 
 }
 
+function statusType(statusId){
+	if (statusId == 1){
+		return "Pending";
+	}
+	if (statusId == 2){
+		return "Approved";
+	}
+	return "Denied";
+}
 
 function createDropDown(){
 	let dropDown = document.createElement("select");
@@ -192,17 +209,18 @@ function createDiv(type){
 async function submitFunc() {
 	console.log(username);
 	//pull values from the fields
-	let amt = document.getElementById("amount").value;
-	console.log(amt);
-	let descr = document.getElementById("description").value;
+	let amt = document.getElementById("amountField").value;
+	//console.log(amt);
+	let descr = document.getElementById("descriptionField").value;
 	//let user = currentUser
 	let type = document.getElementById("expenseType").value;
+	let usern = username;
 	//console.log(expenseType);
 	//console.log("username is" + username)
 	let reimbursementRequest = {
 		amount:amt,	
 		description:descr,
-		user:usern,
+		username:usern,
         expenseType:type
 	};
 	//try{
@@ -285,11 +303,15 @@ async function getReimbursements(username){
 }
 
 async function approveRequest(){
-
+	let response = await fetch(url + reimbursementId + "/approve ", {
+        method: "PUT",
+        body: username,
+        credentials:"include"
+    });
 }
 
-async function rejectRequest(){
-
+async function rejectRequest(requestId){
+	console.log(requestId);
 }
 
 function createTableHead(manager){

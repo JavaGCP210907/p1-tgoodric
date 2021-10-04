@@ -39,19 +39,8 @@ public class Launcher {
 		app.post("/reimbursements/{username}", rc.addReimbursementForUserHandler);
 		app.put("/reimbursements/{reimbursementId}/approve", rc.approveHandler);
 		app.put("reimbursements/{reimbursementId}/reject", rc.rejectHandler);
-		//app.patch("/approveRequest", handler)
-		//app.get("reimbursements/" + , rc.get)
-		//app.
 		
-		//app.get("/reimbursements/<username>", rc.getReimbursementsByUserHandler);
-		/*
-		UserDao uDao = new UserDao();
-		try {
-			System.out.println(uDao.getUsers());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		
 	}
 
 }

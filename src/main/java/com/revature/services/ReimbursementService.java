@@ -55,8 +55,7 @@ public class ReimbursementService {
 	 * @return ArrayList containing the reimbursements for the user
 	 */
 	public ArrayList<Reimbursement> getReimbursements(String username){
-		//TODO: implement validation logic
-		
+	
 		try {
 			return rDao.getReimbursements(username);
 		} catch (SQLException e) {
@@ -100,24 +99,36 @@ public class ReimbursementService {
 
 	public boolean updateStatus(boolean approved, int id, String username) {
 		int newStatus;
-		if(approved) {
-			newStatus = 2;
-		}
-		else {
-			newStatus = 3;
-		}
-		UserDao uDao = new UserDao();
-		int resolverId;
+		boolean resolved;
+		
 		try {
-			resolverId = uDao.getUserId(username);
-			return rDao.updateStatus(id, newStatus, resolverId);
-			
+			ArrayList<Reimbursement> results = rDao.getReimbursements(id);
+			resolved = (results.size() > 0 && results.get(0).getStatus() != 1);
 		}
 		catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return false;
 		}
-		//return false;
+		
+		if (!resolved) { //no change made if status is already resolved
+			if (approved) {
+				newStatus = 2;
+			} else {
+				newStatus = 3;
+			}
+			UserDao uDao = new UserDao();
+			int resolverId;
+			try {
+				resolverId = uDao.getUserId(username);
+				return rDao.updateStatus(id, newStatus, resolverId);
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				return false;
+			}
+			//return false;
+		}
+		return false;
 	}
 	
 	
