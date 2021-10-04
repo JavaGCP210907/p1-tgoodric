@@ -26,7 +26,7 @@ public class ReimbursementDTO {
 			amountD = Double.parseDouble(amount);
 		}
 		catch (NumberFormatException e) {
-			throw e; //rethrow for handling in service layer
+			throw new NumberFormatException(); //rethrow for handling in service layer
 		}
 		//Date submitted = new Date(System.currentTimeMillis());
 		UserDao uDao = new UserDao();

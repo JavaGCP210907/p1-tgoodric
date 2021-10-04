@@ -15,7 +15,7 @@ async function loginFunc(){
         username:uname,
         password:pword
     };
-    console.log(JSON.stringify(user));
+    //console.log(JSON.stringify(user));
     //alert(user);
 
     let response = await fetch(url + "login", {

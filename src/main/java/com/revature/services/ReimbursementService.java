@@ -4,7 +4,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.revature.daos.ReimbursementDao;
+import com.revature.daos.UserDao;
 import com.revature.models.Reimbursement;
+import com.revature.models.ReimbursementDTO;
 
 public class ReimbursementService {
 	
@@ -36,8 +38,6 @@ public class ReimbursementService {
 	 */
 	
 	public ArrayList<Reimbursement> getReimbursementsByUserId(int userId){
-		//TODO:implement validation logic?
-		
 		try {
 			return rDao.getReimbursements(userId);
 		} catch (SQLException e) {
@@ -82,6 +82,42 @@ public class ReimbursementService {
 	public ArrayList<Reimbursement> getReimbursementsbyResolverId(int userId){
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public boolean addReimbursement(ReimbursementDTO rdto) {
+		Reimbursement reimbursement = rdto.getReimbursement();//parse out the reimbursement
+		try {
+			return rDao.addReimbursement(reimbursement);
+		}
+		catch(SQLException e) {
+			//Exception("Something went wrong", e);
+			return false; //if something goes wrong, nothing is added
+		}
+		catch(NumberFormatException e) {
+			throw new NumberFormatException("Non-numeric data entered");
+		}
+	}
+
+	public boolean updateStatus(boolean approved, int id, String username) {
+		int newStatus;
+		if(approved) {
+			newStatus = 2;
+		}
+		else {
+			newStatus = 3;
+		}
+		UserDao uDao = new UserDao();
+		int resolverId;
+		try {
+			resolverId = uDao.getUserId(username);
+			return rDao.updateStatus(id, newStatus, resolverId);
+			
+		}
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		//return false;
 	}
 	
 	

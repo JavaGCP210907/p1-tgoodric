@@ -4,6 +4,7 @@
 package com.revature.daos;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,7 +48,6 @@ public class ReimbursementDao implements IReimbursementDao {
 	}
 
 	private ArrayList<Reimbursement> generateResults(ResultSet rs) throws SQLException {
-		//System.out.println("in generateResults()");
 		ArrayList<Reimbursement> reimbursements;
 		reimbursements = new ArrayList<Reimbursement>();
 		while(rs.next()) {
@@ -63,21 +63,63 @@ public class ReimbursementDao implements IReimbursementDao {
 					rs.getInt("reimbursement_type_fk"),
 					rs.getInt("reimbursement_status_fk"));
 			reimbursements.add(r);
-			//System.out.println(r);
+
 		}
 		return reimbursements;
 	}
-	
+
 	@Override
 	public ArrayList<Reimbursement> getReimbursements(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "select * from reimbursements where reimbursement_id = ?";
+		ArrayList<Reimbursement> reimbursements = null;
+		try(Connection conn = ConnectionUtils.getConnection()){
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			reimbursements = generateResults(rs);
+			return reimbursements;
+		}
+		catch (SQLException e) {
+			StringBuilder sb = new StringBuilder("Error occurred while retrieving all reimbursements: \nSQL State: ");
+			sb.append(e.getSQLState());
+			sb.append("\nVendor Error Code: ");
+			sb.append(e.getErrorCode());
+			throw new SQLException(sb.toString());
+		}
+	}
+
+	/**
+	 * @param id
+	 * @param newStatus
+	 * @param resolverId
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean updateStatus(int id, int newStatus, int resolverId) throws SQLException{
+		String sql = "update reimbursements " +
+				"set reimbursement_status_fk = ?, resolver_id_fk = ?, resolved = ?" +
+				"where reimbursement_id = ?";
+		try(Connection conn = ConnectionUtils.getConnection()){
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, newStatus);
+			ps.setInt(2, resolverId);
+			ps.setDate(3, new Date(System.currentTimeMillis()));
+			ps.setInt(4, id);
+			Reimbursement r = getReimbursements(id).get(0);
+			ps.execute(); //forgot this, was stumped as to why my updates were failing
+			//System.out.println(getReimbursements(id).get(0).equals(r));
+		}
+		catch(SQLException e) {
+			System.out.println("SQLException error code: " + e.getSQLState());
+			throw new SQLException("SQLException error code: " + e.getSQLState(),e);
+			//return false;
+		}
+		return true;
 	}
 
 	@Override
 	public ArrayList<Reimbursement> getReimbursements(String username) throws SQLException {
-		//System.out.println("in DAO");
-		System.out.println(username);
+		//System.out.println(username);
 		String sql = "select * from reimbursements where submitter_id_fk = ?";
 		//String sql = "select * from reimbursements inner join users " +
 		//		"on users.user_id = reimbursements.submitter_id_fk " +
@@ -91,11 +133,11 @@ public class ReimbursementDao implements IReimbursementDao {
 			ps.setInt(1, id);
 			//System.out.println(username);
 			//ps.setString(1, username);
-			
+
 			rs = ps.executeQuery();
 			//System.out.println("fetching results");
 			results = generateResults(rs);
-			System.out.println(results);
+			//System.out.println(results);
 			return results;
 		}
 		catch(SQLException e) {
@@ -152,7 +194,7 @@ public class ReimbursementDao implements IReimbursementDao {
 			ps.setInt(8, r.getReimbursementType());
 			ps.setInt(9, r.getStatus());
 			ps.executeUpdate();
-			
+
 			return true;
 		}
 		catch (SQLException e) {

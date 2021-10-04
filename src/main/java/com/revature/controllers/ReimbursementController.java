@@ -3,7 +3,6 @@ package com.revature.controllers;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.revature.daos.ReimbursementDao;
 import com.revature.models.Reimbursement;
 import com.revature.models.ReimbursementDTO;
 import com.revature.services.ReimbursementService;
@@ -20,22 +19,16 @@ public class ReimbursementController {
 		
 		//check for session, return 403 forbidden if not a manager
 		
-		//if(true){
-		if((ctx.req.getSession(false) != null)){
-			List<Reimbursement> allReimbursements = rs.getReimbursements();
+		List<Reimbursement> allReimbursements = rs.getReimbursements();
 
-			//parse into JSON
-			Gson gson = new Gson();
+		//parse into JSON
+		Gson gson = new Gson();
 
-			String reimbursementJSON = gson.toJson(allReimbursements);
+		String reimbursementJSON = gson.toJson(allReimbursements);
 
 
-			ctx.result(reimbursementJSON);
-			ctx.status(200);
-		}
-		else {
-			ctx.status(403);
-		}
+		ctx.result(reimbursementJSON);
+		ctx.status(200);
 	};
 	
 	public Handler getReimbursementsByUserHandler = (ctx)->{
@@ -68,19 +61,23 @@ public class ReimbursementController {
 		//pull the reimbursement data from the webpage as JSON
 		System.out.println("in handler");
 		String reimbursementJson = ctx.body();
-		
+		System.out.println(reimbursementJson);
 		Gson gson = new Gson();
-		Reimbursement reimbursement = null;
+		//Reimbursement reimbursement = null;
 		ReimbursementDTO rdto = gson.fromJson(reimbursementJson, ReimbursementDTO.class);
 		
 		System.out.println(rdto);
 		try {
 			//System.out.println("in reimbursement handler");
-			reimbursement = rdto.getReimbursement();
+			System.out.println("entering reimbursement service");
 			//System.out.println("rdto parsed");
+			if(rs.addReimbursement(rdto)) {
+				ctx.status(201);
+				return;
+			};
 		}
 		catch(NumberFormatException e) {
-			ctx.status(400); //bad request
+			ctx.status(400); //bad request, thrown if non-numeric data passed to amount field
 			return;
 		}
 		catch(Exception e) {
@@ -89,10 +86,38 @@ public class ReimbursementController {
 			e.printStackTrace();
 			return;
 		}
-		ReimbursementDao rDao = new ReimbursementDao();
-		System.out.println("entering reimbursement dao");
-		rDao.addReimbursement(reimbursement);
-		ctx.status(201);
-		//rDao.
+	};
+	
+	public Handler addReimbursementForUserHandler = (ctx) -> {
+		String json = ctx.body();
+		System.out.println(json);
+	};
+
+
+	public Handler approveHandler = (ctx) -> {
+		
+		System.out.println("in approveHandler");
+		int reimbursementId = Integer.parseInt(ctx.pathParam("reimbursementId"));
+		String resolverId = ctx.body();
+		resolverId = "gbansen";		
+		if(rs.updateStatus(true, reimbursementId, resolverId)){
+			ctx.status(200);
+		}
+		else {
+			ctx.status(400);
+		}
+	};
+
+
+	public Handler rejectHandler = (ctx) -> {
+		int reimbursementId = Integer.parseInt(ctx.pathParam("reimbursementId"));
+		String resolverId = ctx.body();
+		resolverId = "gbansen";
+		if(rs.updateStatus(false, reimbursementId, resolverId)){
+			ctx.status(200);
+		}
+		else {
+			ctx.status(400);
+		}
 	};
 }

@@ -1,65 +1,123 @@
-"use strict"
 const url = "http://localhost:8192/"; //set url
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-//const username = urlParams.get("username");
-console.log
-//const manager = urlParams.get("manager");
-const params = getCookie("username"); //it wouldn't work with params, don't ask
-//const role = getCookie("role");
-console.log("params: " + params);
-const paramArray = params.split("|");
-const username = paramArray[0];
-const role = paramArray[1];
+
+let params = getCookie("username"); //it wouldn't work with params, don't ask
+let paramArray = params.split("|");
+let username = paramArray[0];
+let role = paramArray[1];
+
+//document.getElementById("")
 
 
 let pageContents =  document.getElementById("pageContents");    
-let submissionForm = document.createElement("form");
-let titleHeader = document.createElement("h2");
-titleHeader.innerText = "Initech Reimbursement Management System";
-//title
-submissionForm.appendChild(titleHeader);
-submissionForm.appendChild(document.createElement("br"));
 if(role === "employee"){
-    //Generate the page contents for non-manager
-    //console.log(username);
-    let instructions = document.createElement("h3");
-    instructions.innerText = "Enter information required for reimbursement request:";
-    submissionForm.appendChild(instructions);
-
-    //Amount field
-    let amountFieldDiv = createDiv("amount");
-    submissionForm.appendChild(amountFieldDiv);
-
-    //description
-    let descriptionFieldDiv = createDiv("description");
-    submissionForm.appendChild(descriptionFieldDiv);
-
-    let expenseDiv = document.createElement("div")
-    expenseDiv.setAttribute("id", "expenseDiv");
-    let expenseType = createDropDown();
-    expenseType.setAttribute("id", "expenseType");
-    expenseDiv.appendChild(expenseType);
-    expenseDiv.appendChild(document.createElement("br"));
-    expenseDiv.appendChild(document.createElement("br"));
-    submissionForm.appendChild(expenseDiv);
-
-    //submit button 
-    let submitButton = document.createElement("button");
-    submitButton.setAttribute("id", "submitButton");
-    //submitButton.setAttribute("text", "Submit");
-    submitButton.addEventListener("click", submitFunc);
-    submitButton.setAttribute("class", "btn btn-dark col-sm-1");
-    submitButton.innerText = "Submit";
-    submissionForm.appendChild(submitButton);
-    submissionForm.appendChild(document.createElement("br"));
-    submissionForm.appendChild(document.createElement("br"));
-    pageContents.appendChild(submissionForm);
+   
 }
-
 else{
-    //let
+	//stuff for managers
 }
+pageContents.appendChild(document.createElement("br"));
+pageContents.appendChild(document.createElement("br"));
+//button to generate reimbursements
+document.getElementById("viewReimbursementsButton").addEventListener("click", viewReimbursementsFunc)
+/* 
+async function getReimbursements(){
+	let response = null;
+	if (role === "manager"){
+		await fetch (url + "reimbursements");
+	}
+	else await fetch(url +)
+}
+ */
+
+async function viewReimbursementsFunc(){
+	let response = null;
+	if(role === "manager"){
+		response = await fetch(url + "reimbursements/");
+		if (response.status === 200){
+			let data = await response.json();
+			for (let reimbursement of data) {
+				let row = document.createElement("tr"); //create a table row
+
+				let cell = document.createElement("td"); 
+				cell.innerHTML = reimbursement.reimbursementId; 
+				row.appendChild(cell);
+
+				let cell2 = document.createElement("td"); 
+				cell2.innerHTML = reimbursement.amount; 
+				row.appendChild(cell2);
+
+				let cell3 = document.createElement("td"); 
+				cell3.innerHTML = reimbursement.description; 
+				row.appendChild(cell3);
+
+				let cell4 = document.createElement("td"); 
+				cell4.innerHTML = reimbursement.reimbursementStatus; 
+				row.appendChild(cell4);
+
+				let cell5 = document.createElement("td"); 
+				cell5.innerHTML = reimbursement.status; 
+				row.appendChild(cell5);
+				
+				let cell6 = document.createElement("td"); 
+				//cell6.innerHTML = reimbursement.resolved; 
+				row.appendChild(cell6);
+				
+				let approveButton = document.createElement("button");
+				approveButton.addEventListener("click", approveRequest);
+				approveButton.innerText="Approve";
+				let rejectButton = document.createElement("button");
+				rejectButton.addEventListener("click",rejectRequest);
+				rejectButton.innerText = "Deny";
+				cell6.appendChild(approveButton);
+				cell6.appendChild(rejectButton);
+				
+				let table = document.getElementById("reimbursementTable");
+				table.appendChild(row);
+
+			}
+		}
+	}
+	else{
+		response = await fetch(url + "reimbursements/" + username);
+		if (response.status === 200){
+			let data = await response.json();
+			for (let reimbursement of data) {
+				let row = document.createElement("tr"); //create a table row
+
+				let cell = document.createElement("td"); 
+				cell.innerHTML = reimbursement.reimbursementId; 
+				row.appendChild(cell);
+
+				let cell2 = document.createElement("td"); 
+				cell2.innerHTML = reimbursement.amount; 
+				row.appendChild(cell2);
+
+				let cell3 = document.createElement("td"); 
+				cell3.innerHTML = reimbursement.description; 
+				row.appendChild(cell3);
+
+				let cell4 = document.createElement("td"); 
+				cell4.innerHTML = reimbursement.reimbursementStatusFk; 
+				row.appendChild(cell4);
+
+				let cell5 = document.createElement("td"); 
+				cell5.innerHTML = reimbursement.status; 
+				row.appendChild(cell5);
+				
+				let cell6 = document.createElement("td"); 
+				cell6.innerHTML = reimbursement.resolved; 
+				row.appendChild(cell6);
+				//row.setAttribute("class", "table table-striped table-dark");
+				let table = document.getElementById("reimbursementTable");
+				table.appendChild(row)
+				//table.setAttribute("class", "table table-dark table-striped")
+			}
+		}
+	}
+
+
+}
+
 
 function createDropDown(){
 	let dropDown = document.createElement("select");
@@ -80,6 +138,8 @@ function createTextField(id, placeholder){
 
 function createReimbursementTable(username, manager){
 	
+	//let data = await getReimbursements(username).body.JSON();
+
 	//generate table structure
 	let tableDiv = document.createElement("div");
 	tableDiv.setAttribute("id", "tableDiv");
@@ -87,7 +147,7 @@ function createReimbursementTable(username, manager){
 	//generate table
 	let table = document.createElement("table");
 	table.setAttribute("id", "reimbursementTable");
-	table.setAttribute("class", "table table-bordered table-dark");
+	table.setAttribute("class", "table table-striped table-dark");
 	
 	//generate the head	
 	let head = document.createElement("thead");
@@ -104,9 +164,7 @@ function createReimbursementTable(username, manager){
 	table.appendChild(body);
 	tableDiv.appendChild(table);
 	
-	
-	
-	//finally done
+	//let data = null;
 	return tableDiv;
 }
 
@@ -141,29 +199,34 @@ async function submitFunc() {
 	let type = document.getElementById("expenseType").value;
 	//console.log(expenseType);
 	//console.log("username is" + username)
-	let responseStatus = await submit()
-	//}
-	//catch(error){
-		//hopefully this will work
-	//}
-	if ((responseStatus === 400)){
+	let reimbursementRequest = {
+		amount:amt,	
+		description:descr,
+		user:usern,
+        expenseType:type
+	};
+	//try{
+	let response = await fetch(url + "addReimbursement/" /*  + username  */, {
+		method: "post", /* 
+ 		headers: {
+    		'Accept': 'application/json',
+    		'Content-Type': 'application/json'
+		}, */
+  		body: JSON.stringify(reimbursementRequest),
+		credentials:"include"
+	});
+
+	if ((response.status === 400)){
 		if(amt !== ""){
 			alert("Please enter amount in the format XX.YY");
 		}
 		return;
 	}
-	else if (responseStatus == 201){
+	else if (response.status == 201){
 		alert("Request submitted, awaiting approval");
-		//clear request history
-		//let reimbursementTable = document.getElementById("reimbursementTable");
-		//if (reimbursementTable != null){
-			//reimbursementTable.remove();
-		//}
-		//recreate table
-		//reimbursementTable = createReimbursementTable();
 	}
 	else{
-		alert("An error occurred while processing your request")
+		alert("An error occurred while processing your request");
 	}
 	//console.log(reimbursementRequest);
 }
@@ -181,7 +244,8 @@ function getCookie(cookieName) {
 	  }
 	}
 	return "";
-  }
+}
+/*
 async function submit(amt, descr, usern, type){
 	let reimbursementRequest = {
 		amount:amt,	
@@ -193,7 +257,57 @@ async function submit(amt, descr, usern, type){
 	let response = fetch(url + "addReimbursement/", {
 		method:"POST",
 		body:JSON.stringify(reimbursementRequest),
-		credentials:"include"
+		//credentials:"include"
 	});
 	return (await response).status;
+}
+*/
+async function getReimbursements(username){
+	let response = null;
+	if (username === "all"){
+		response = await fetch(url + "reimbursements");
+	}
+	else {
+		response = await fetch(url + "reimbursements/" + username);
+	}
+	let data = null;
+	console.log(response);
+	if (response.status === 200){
+		data = await response.json();
+		
+		for(let reimbursement of data){
+			console.log(reimbursement);		
+		}
+		
+	}
+	
+	return data;
+}
+
+async function approveRequest(){
+
+}
+
+async function rejectRequest(){
+
+}
+
+function createTableHead(manager){
+	let tRow = document.createElement("tr");
+	tRow.appendChild(createHeaderLabel("ID"));
+	tRow.appendChild(createHeaderLabel("Amount"));
+	tRow.appendChild(createHeaderLabel("Description"));
+	tRow.appendChild(createHeaderLabel("Date Submitted"));
+	tRow.appendChild(createHeaderLabel("Status"));
+	tRow.appendChild(createHeaderLabel("Date Approved/Rejected"));
+	if(manager){
+		tRow.appendChild(createHeaderLabel("Update Status"));
+	}
+	return tRow;
+}
+
+function createHeaderLabel(text){
+	let label = document.createElement("th")
+	label.innerText = text;
+	return label;
 }

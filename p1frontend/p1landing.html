@@ -6,11 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Initech Reimbursement Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <title>Document</title>
 </head>
 <body>
+    <h1>Initech Reimbursement Management System</h1>
+    
     <div id = "pageContents">
-
+        <div class="form-group">
+            <form>
+                <div class = "form-row">
+                    <label for="amountField">Amount: </label>
+                    <br>
+                    <input type="text" id = "amountField" class = "col-md-3" placeholder = "XX.YY">
+                </div>
+                <div class = "form-row">
+                    <label for="descriptionField">Description: </label>
+                    <br>
+                    <input type="text" id = "amountField" class = "form-select col-6" placeholder="Description">
+                </div>
+                <div class = "form-group col-md-4">
+                    <label for="expenseType">Type:</label>
+                    <br>
+                    <select id ="expenseType"  class ="form-control">
+                        <option>Lodging</option>
+                        <option>Food</option>
+                        <option>Travel</option>
+                        <option>Other</option>
+                    </select>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <br>
+                    <br>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id = "tablePlaceholder">
+        <div id = "table-row" class="row">
+            <table id="reimbursementTable" class="table table-hover table-bordered table-striped">
+                <thead id="reimbursementHead">
+                    <tr>
+                        <th>ID</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Date Submitted</th>
+                        <th>Date Resolved</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="reimbursementBody">
+                  
+                </tbody>
+            </table>        
+    
+        </div>
+    </div>
+    <div id = "buttonPlaceholder">
+        <button class = "btn btn-dark" id= "viewReimbursementsButton">View Reimbursements</button>
     </div>
     <script src="p1landing.js"></script>
 </body>

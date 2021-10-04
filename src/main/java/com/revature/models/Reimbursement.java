@@ -151,7 +151,6 @@ public class Reimbursement {
 	
 	
 	
-	//boilerplate instance methods
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -354,4 +353,13 @@ public class Reimbursement {
 	void setStatus(int status) {
 		this.status = status;
 	}
+
+	@Override
+	public String toString() {
+		return "Reimbursement [reimbursementId=" + reimbursementId + ", amount=" + amount + ", submitted=" + submitted
+				+ ", resolved=" + resolved + ", description=" + description + ", receipt=" + receipt
+				+ ", reimbursementType=" + reimbursementType + ", submittedBy=" + submittedBy + ", resolvedBy="
+				+ resolvedBy + ", status=" + status + "]";
+	}
+	
 }
