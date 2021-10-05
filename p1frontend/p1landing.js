@@ -14,6 +14,8 @@ pageContents.appendChild(document.createElement("br"));
 //button to generate reimbursements
 document.getElementById("viewReimbursementsButton").addEventListener("click", viewReimbursementsFunc);
 document.getElementById("submitButton").addEventListener("click", submitFunc);
+
+//function get
 /* 
 async function getReimbursements(){
 	let response = null;
@@ -27,14 +29,23 @@ async function getReimbursements(){
 async function viewReimbursementsFunc(){
 	let response = null;
 	if(role === "manager"){
-		response = await fetch(url + "reimbursements/");
-		if (response.status === 200){
+
+		extension = document.getElementById("typeSelector").value
+		urlBuilder = url + "reimbursements" + extension
+		response = await fetch(urlBuilder);
+		let table = document.getElementById("reimbursementBody");
+		table.innerText = "";
+		if (response.status === 204){
+			alert("No results of this type")
+		}
+		else if (response.status === 200){
 			let data = await response.json();
 			for (let reimbursement of data) {
 				let row = document.createElement("tr"); //create a table row
 
 				let cell = document.createElement("th");
-				cell.setAttribute("scope", "row")
+				cell.setAttribute("scope", "row");
+				cell.setAttribute("id", "userId" + reimbursement.reimbursementId)
 				cell.innerHTML = reimbursement.reimbursementId; 
 				row.appendChild(cell);
 
@@ -47,7 +58,7 @@ async function viewReimbursementsFunc(){
 				row.appendChild(cell3);
 
 				let cell4 = document.createElement("td"); 
-				cell4.innerHTML = reimbursement.reimbursementStatus; 
+				cell4.innerHTML = reimbursement.submitted; 
 				row.appendChild(cell4);
 
 				let cell5 = document.createElement("td"); 
@@ -57,12 +68,14 @@ async function viewReimbursementsFunc(){
 				let cell6 = document.createElement("td"); 
 				//cell6.innerHTML = reimbursement.resolved; 
 				row.appendChild(cell6);
+				
 				if (reimbursement.status == 1){
 					let approveButton = document.createElement("button");
-					approveButton.addEventListener("click", approveRequest);
+					approveButton.addEventListener("click", function(){approveRequest(reimbursement.reimbursementId)});
 					approveButton.innerText="Approve";
 					let rejectButton = document.createElement("button");
-					rejectButton.addEventListener("click", rejectRequest);
+					//rejectButton.addEventListener("click", rejection.bind(null));
+					rejectButton.addEventListener("click", function(){rejectRequest(reimbursement.reimbursementId)});
 					rejectButton.innerText = "Deny";
 					cell6.appendChild(approveButton);
 					cell6.appendChild(rejectButton);
@@ -71,22 +84,30 @@ async function viewReimbursementsFunc(){
 					cell6.innerHTML = statusType(reimbursement.status);
 				}
 				
-				let table = document.getElementById("reimbursementTable");
+
 				table.appendChild(row);
 
 			}
 		}
 	}
 	else{
-		response = await fetch(url + "reimbursements/" + username);
-		if (response.status === 200){
+		extension = document.getElementById("typeSelector").value
+		urlBuilder = url + "reimbursements/" + username + extension;
+		console.log(urlBuilder)
+		response = await fetch(urlBuilder);
+		let tableBody = document.getElementById("reimbursementBody");
+		tableBody.innerText = "";
+		if (response.status === 204){
+			alert("No results of this type")
+		}
+		else if (response.status === 200){
 			let data = await response.json();
 			
 			for (let reimbursement of data) {
 				let row = document.createElement("tr"); //create a table row
 
 				let cell = document.createElement("td");
-				cell.setAttribute("class", "idNumber" + reimbursement.reimbursementId) 
+				//cell.setAttribute("class", "idNumber" + reimbursement.reimbursementId) 
 				cell.innerHTML = reimbursement.reimbursementId;
 
 				row.appendChild(cell);
@@ -116,8 +137,7 @@ async function viewReimbursementsFunc(){
 				cell6.innerHTML = statusType(reimbursement.status); 
 				row.appendChild(cell6);
 				//row.setAttribute("class", "table table-striped table-dark");
-				let table = document.getElementById("reimbursementTable");
-				table.appendChild(row);
+				tableBody.appendChild(row);
 				//table.setAttribute("class", "table table-dark table-striped")
 			}
 		}
@@ -134,76 +154,6 @@ function statusType(statusId){
 		return "Approved";
 	}
 	return "Denied";
-}
-
-function createDropDown(){
-	let dropDown = document.createElement("select");
-	dropDown.setAttribute("id", "expenseType");
-	dropDown.appendChild(addOption("Lodging"));
-	dropDown.appendChild(addOption("Travel"));
-	dropDown.appendChild(addOption("Food"));
-	dropDown.appendChild(addOption("Other"));
-	return dropDown;
-}
-
-function createTextField(id, placeholder){             
-    let element = document.createElement("input");
-    element.setAttribute("id", id);                     
-    element.setAttribute("placeholder", placeholder)    
-    return element;
-}
-
-function createReimbursementTable(username, manager){
-	
-	//let data = await getReimbursements(username).body.JSON();
-
-	//generate table structure
-	let tableDiv = document.createElement("div");
-	tableDiv.setAttribute("id", "tableDiv");
-	
-	//generate table
-	let table = document.createElement("table");
-	table.setAttribute("id", "reimbursementTable");
-	table.setAttribute("class", "table table-striped table-dark");
-	
-	//generate the head	
-	let head = document.createElement("thead");
-	head.setAttribute("id", "reimbursementHead");
-	let tableHeadLabels = createTableHead(manager);
-	head.appendChild(tableHeadLabels)
-	
-	//generate the body
-	let body = document.createElement("tbody")
-	body.setAttribute("id", "reimbursementBody");
-	
-	//bolt everything together
-	table.appendChild(head);
-	table.appendChild(body);
-	tableDiv.appendChild(table);
-	
-	//let data = null;
-	return tableDiv;
-}
-
-function addOption(text){
-	let current = document.createElement("option");
-	current.setAttribute("value", text);
-	current.innerText = text;
-	return current;
-}
-
-function createDiv(type){
-	let capitalize = type[0].toUpperCase() + type.substring(1);
-	let div = document.createElement("div");
-	let label = document.createElement("h4");
-	label.innerText = capitalize + ":";
-    let field = createTextField(type, capitalize);
-    
-    div.appendChild(label);
-    div.appendChild(field);
-    div.appendChild(document.createElement("br"));
-    div.appendChild(document.createElement("br"));
-    return div;
 }
 
 async function submitFunc() {
@@ -263,23 +213,7 @@ function getCookie(cookieName) {
 	}
 	return "";
 }
-/*
-async function submit(amt, descr, usern, type){
-	let reimbursementRequest = {
-		amount:amt,	
-		description:descr,
-		user:usern,
-        expenseType:type
-	};
-	//try{
-	let response = fetch(url + "addReimbursement/", {
-		method:"POST",
-		body:JSON.stringify(reimbursementRequest),
-		//credentials:"include"
-	});
-	return (await response).status;
-}
-*/
+
 async function getReimbursements(username){
 	let response = null;
 	if (username === "all"){
@@ -302,30 +236,22 @@ async function getReimbursements(username){
 	return data;
 }
 
-async function approveRequest(){
-	let response = await fetch(url + reimbursementId + "/approve ", {
+async function approveRequest(requestId){
+	let response = await fetch(url +"reimbursements/" + requestId + "/approve ", {
         method: "PUT",
         body: username,
         credentials:"include"
     });
+	return response.status;
 }
 
 async function rejectRequest(requestId){
-	console.log(requestId);
-}
-
-function createTableHead(manager){
-	let tRow = document.createElement("tr");
-	tRow.appendChild(createHeaderLabel("ID"));
-	tRow.appendChild(createHeaderLabel("Amount"));
-	tRow.appendChild(createHeaderLabel("Description"));
-	tRow.appendChild(createHeaderLabel("Date Submitted"));
-	tRow.appendChild(createHeaderLabel("Status"));
-	tRow.appendChild(createHeaderLabel("Date Approved/Rejected"));
-	if(manager){
-		tRow.appendChild(createHeaderLabel("Update Status"));
-	}
-	return tRow;
+	let response = await fetch(url +"reimbursements/" + requestId + "/reject ", {
+        method: "PUT",
+        body: username,
+        credentials:"include"
+    });
+	return response.status;
 }
 
 function createHeaderLabel(text){

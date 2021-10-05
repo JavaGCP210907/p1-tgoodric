@@ -101,6 +101,7 @@ public class ReimbursementDao implements IReimbursementDao {
 				"where reimbursement_id = ?" ;
 		try(Connection conn = ConnectionUtils.getConnection()){
 			PreparedStatement ps = conn.prepareStatement(sql);
+			System.out.println("in updateStatus");
 			ps.setInt(1, newStatus);
 			ps.setInt(2, resolverId);
 			ps.setDate(3, new Date(System.currentTimeMillis()));
@@ -115,6 +116,7 @@ public class ReimbursementDao implements IReimbursementDao {
 			//return false;
 		}
 		return true;
+		
 	}
 
 	@Override
@@ -160,8 +162,25 @@ public class ReimbursementDao implements IReimbursementDao {
 
 	@Override
 	public ArrayList<Reimbursement> getReimbursementsByStatus(int status) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "select * from reimbursements where reimbursement_status_fk = ? order by reimbursement_id desc";
+		ArrayList<Reimbursement> results = null;
+		ResultSet rs = null;
+		try(Connection conn = ConnectionUtils.getConnection()){
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, status);
+			rs = ps.executeQuery();
+			results = generateResults(rs);
+
+			return results;
+		}
+		catch(SQLException e) {
+			StringBuilder sb = new StringBuilder("Error occurred while adding reimbursement: ");
+			sb.append("\nSQL State: ");
+			sb.append(e.getSQLState());
+			sb.append("\nVendor Error Code: ");
+			sb.append(e.getErrorCode());
+			throw new SQLException(sb.toString(),e);
+		}
 	}
 
 	@Override
@@ -207,4 +226,27 @@ public class ReimbursementDao implements IReimbursementDao {
 		}
 	}
 
+	public ArrayList<Reimbursement> getReimbursementsByUserAndStatus(int userId, int statusId) throws SQLException {
+		String sql = "select * from reimbursements where reimbursement_status_fk = ? and submitter_id_fk = ? "
+				+"order by reimbursement_id desc";
+		ArrayList<Reimbursement> results = null;
+		ResultSet rs = null;
+		try(Connection conn = ConnectionUtils.getConnection()){
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, statusId);
+			ps.setInt(2, userId);
+			rs = ps.executeQuery();
+			results = generateResults(rs);
+
+			return results;
+		}
+		catch(SQLException e) {
+			StringBuilder sb = new StringBuilder("Error occurred while adding reimbursement: ");
+			sb.append("\nSQL State: ");
+			sb.append(e.getSQLState());
+			sb.append("\nVendor Error Code: ");
+			sb.append(e.getErrorCode());
+			throw new SQLException(sb.toString(),e);
+		}
+	}
 }

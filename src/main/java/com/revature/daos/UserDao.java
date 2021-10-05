@@ -148,8 +148,6 @@ public class UserDao implements IUserDao {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
-
 	@Override
 	public ArrayList<User> getForLogin(String username, String password) throws SQLException {
 		String sql = "select * from users where username = ? and password_hash = ?";

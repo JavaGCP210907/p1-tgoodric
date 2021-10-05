@@ -36,9 +36,11 @@ public class Launcher {
 		app.get("/reimbursements", rc.getAllReimbursementsHandler); 
 		app.post("/addReimbursement", rc.addReimbursementHandler);
 		app.get("/reimbursements/{username}", rc.getReimbursementsByUserHandler);
-		app.post("/reimbursements/{username}", rc.addReimbursementForUserHandler);
+		app.post("/reimbursements/{username}", rc.addReimbursementForUserHandler); //not used except for debugging
 		app.put("/reimbursements/{reimbursementId}/approve", rc.approveHandler);
-		app.put("reimbursements/{reimbursementId}/reject", rc.rejectHandler);
+		app.put("/reimbursements/{reimbursementId}/reject", rc.rejectHandler);
+		app.get("/reimbursements/status/{statusId}", rc.getReimbursementsByStatusHandler);
+		app.get("/reimbursements/{username}/status/{statusId}", rc.getReimbursementsByUsernameAndStatusHandler);
 		
 		
 	}
