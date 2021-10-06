@@ -5,8 +5,6 @@ import org.eclipse.jetty.server.session.SessionHandler;
 
 //import com.google.gson.Gson;
 
-import java.sql.SQLException;
-
 import com.revature.controllers.LoginController;
 import com.revature.controllers.ReimbursementController;
 //import com.revature.daos.UserDao;

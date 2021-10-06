@@ -4,7 +4,7 @@ let params = getCookie("username"); //it wouldn't work with params, don't ask
 let paramArray = params.split("|");
 const username = paramArray[0];
 const role = paramArray[1];
-
+//document.cookie = "username = " + paramString +"; path = file:///C:/Users/tdgoo/Documents/Revature/Projects/p1javalin4Version/p1core/p1-tgoodric/p1frontend/p1landing.html";
 //document.getElementById("")
 
 
@@ -27,6 +27,8 @@ async function getReimbursements(){
  */
 
 async function viewReimbursementsFunc(){
+	
+	
 	let response = null;
 	if(role === "manager"){
 
@@ -62,7 +64,12 @@ async function viewReimbursementsFunc(){
 				row.appendChild(cell4);
 
 				let cell5 = document.createElement("td"); 
-				cell5.innerHTML = reimbursement.status; 
+				if(reimbursement.resolved == undefined){
+					cell5.innerHTML = "Pending";
+				}
+				else{
+					cell5.innerHTML = reimbursement.resolved;
+				}
 				row.appendChild(cell5);
 				
 				let cell6 = document.createElement("td"); 
@@ -142,8 +149,6 @@ async function viewReimbursementsFunc(){
 			}
 		}
 	}
-
-
 }
 
 function statusType(statusId){
@@ -157,46 +162,54 @@ function statusType(statusId){
 }
 
 async function submitFunc() {
-	console.log(username);
-	//pull values from the fields
 	let amt = document.getElementById("amountField").value;
-	//console.log(amt);
 	let descr = document.getElementById("descriptionField").value;
-	//let user = currentUser
-	let type = document.getElementById("expenseType").value;
-	let usern = username;
-	//console.log(expenseType);
-	//console.log("username is" + username)
-	let reimbursementRequest = {
-		amount:amt,	
-		description:descr,
-		username:usern,
-        expenseType:type
-	};
-	//try{
-	let response = await fetch(url + "addReimbursement/" /*  + username  */, {
-		method: "post", /* 
- 		headers: {
-    		'Accept': 'application/json',
-    		'Content-Type': 'application/json'
-		}, */
-  		body: JSON.stringify(reimbursementRequest),
-		credentials:"include"
-	});
+	//if(validateString(amt) && (descr !== "") && (amt !== ""))
+	{
+		console.log(username);
+		//pull values from the fields
+		//let amt = document.getElementById("amountField").value;
+		//let validatedAmt = validateString(amt);
+		//console.log(amt);
+		//let descr = document.getElementById("descriptionField").value;
+		//let user = currentUser
+		let type = document.getElementById("expenseType").value;
+		let usern = username;
+		//console.log(expenseType);
+		//console.log("username is" + username)
+		let reimbursementRequest = {
+			amount:amt,	
+			description:descr,
+			username:usern,
+			expenseType:type
+		};
+/* 
+		if (validatedAmt === "" || descr === ""){
+			alert("Please fill out all fields correctly");
+			return;
+		} */
 
-	if ((response.status === 400)){
-		if(amt !== ""){
-			alert("Please enter amount in the format XX.YY");
+		//try{
+		let response = await fetch(url + "addReimbursement" , {
+			method: "POST", /* 
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}, */
+			body: JSON.stringify(reimbursementRequest),
+			credentials:"include"
+		});
+		console.log(response.status);
+		if ((response.status === 400)){
+			if(amt !== ""){
+				alert("Please enter amount in the format XX.YY");
+			}
+			return;
 		}
-		return;
+		else if (response.status == 201){
+			alert("Request submitted, awaiting approval");
+		}
 	}
-	else if (response.status == 201){
-		alert("Request submitted, awaiting approval");
-	}
-	else{
-		alert("An error occurred while processing your request");
-	}
-	//console.log(reimbursementRequest);
 }
 
 function getCookie(cookieName) {
@@ -258,4 +271,10 @@ function createHeaderLabel(text){
 	let label = document.createElement("th")
 	label.innerText = text;
 	return label;
+}
+
+
+function validateString(str) {
+	console.log(str.match(/^[+-]?(\d*\.)?\d+$/));
+	return str.match(/^[+-]?(\d*\.)?\d+$/)
 }

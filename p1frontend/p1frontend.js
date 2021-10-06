@@ -4,6 +4,8 @@ console.log("Front-end design is my passion")
 document.getElementById("loginButton").addEventListener("click", loginFunc);
 document.getElementById("submitButton").addEventListener("click", submitFunc);
 
+
+
 async function loginFunc(){
     let uname = document.getElementById("usernameField").value;
     //console.log(username);
