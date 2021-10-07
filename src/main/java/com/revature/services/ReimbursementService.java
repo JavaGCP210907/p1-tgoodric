@@ -2,8 +2,6 @@ package com.revature.services;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
-
 import com.revature.daos.ReimbursementDao;
 import com.revature.daos.UserDao;
 import com.revature.models.Reimbursement;
@@ -22,7 +20,7 @@ public class ReimbursementService {
 	public ArrayList<Reimbursement> getReimbursements(){
 		try {
 			ArrayList<Reimbursement> result = rDao.getReimbursements();
-			System.out.println(result);
+			//System.out.println(result);
 			return result;
 		} 
 		catch (SQLException e) {
@@ -45,7 +43,7 @@ public class ReimbursementService {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			return new ArrayList<Reimbursement>();
+			return null;
 		}
 	
 	}
@@ -60,34 +58,23 @@ public class ReimbursementService {
 	
 		try {
 			return rDao.getReimbursements(username);
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	
-	public ArrayList<Reimbursement> getReimbursements(String fName, String lName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	
 	public ArrayList<Reimbursement> getReimbursementsByStatus(int status){
 		try {
 			return rDao.getReimbursementsByStatus(status);
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-
-	public ArrayList<Reimbursement> getReimbursementsbyResolverId(int userId){
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public boolean addReimbursement(ReimbursementDTO rdto) {
@@ -153,6 +140,5 @@ public class ReimbursementService {
 		}
 	}
 	
-	
-	
+		
 }

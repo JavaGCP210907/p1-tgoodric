@@ -188,6 +188,6 @@ public class UserDao implements IUserDao {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return -1;
 	}
 }

@@ -27,7 +27,7 @@ public class LoginService {
 		}
 		
 		if (match.size() != 1) {//> 1 impossible due to database constraints, but 
-			return 0;			//guarding against it anyways
+			return 0;			//guarding against it anyways, 
 		}
 		return match.get(0).getRoleId(); 
 	}
